@@ -1,21 +1,31 @@
 from flask_restx import Resource, Api, Namespace, fields
 from flask import jsonify, request
+from flask_sqlalchemy import SQLAlchemy
 
 from ..models.course import *
 
 from app import app
+from app import db
 
 api = Api(app)
 # ns = api.namespace('courses','course list')
 
 coursemodel = CourseModel()
-coursesschema = CourseSchema(many=True)
+courseschema = CourseSchema(many=True)
+
 @api.route('/courses')
 class Course(Resource):
     def get(self):
-        print('get courses hit..')
         courses = coursemodel.query.all()
-        return jsonify(coursesschema.dump(courses))
+        return jsonify(courseschema.dump(courses))
+
+    def post(self):
+        course_data = request.get_json()
+        course_new = CourseModel(**course_data)
+        db.session.add(course_new)
+        db.session.commit()
+        return course_data
+
 
 
 
