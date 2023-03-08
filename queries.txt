@@ -1,0 +1,8 @@
+INSERT INTO public.courses(
+	id, code, title, age_group, createts, updatets)
+	VALUES ('47ec7120-97f3-432a-8775-8738664aadf2', 'BGI', 'Bhagavad Gita Introduction',
+			'10-70', '2023-03-07T06:10:50+00:00', '2023-03-07T06:10:50+00:00');
+
+
+SELECT id, code, title, age_group, createts, updatets
+      	FROM public.courses;

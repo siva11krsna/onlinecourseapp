@@ -1,20 +1,21 @@
 from flask_restx import Resource, Api, Namespace, fields
 from flask import jsonify, request
 
-from ..schemas import course as courseschema
-from ..models import course as course
+from ..models.course import *
+
 from app import app
 
 api = Api(app)
-courses = courseschema(many=True)
+# ns = api.namespace('courses','course list')
 
-
-class Course:
-
-    @app.route('/courses')
-    def getCourses(self):
-        courses = course.query.all()
-        return jsonify(courseschema.dump(courses))
+coursemodel = CourseModel()
+coursesschema = CourseSchema(many=True)
+@api.route('/courses')
+class Course(Resource):
+    def get(self):
+        print('get courses hit..')
+        courses = coursemodel.query.all()
+        return jsonify(coursesschema.dump(courses))
 
 
 
