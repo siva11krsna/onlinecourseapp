@@ -24,6 +24,7 @@ class Course(Resource):
         course_new = CourseModel(**course_data)
         db.session.add(course_new)
         db.session.commit()
+        course_data['id']=str(course_new.id)
         return course_data
 
 
