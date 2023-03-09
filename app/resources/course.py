@@ -8,10 +8,11 @@ from app import app
 from app import db
 
 api = Api(app)
-# ns = api.namespace('courses','course list')
+# ns = api.namespace('/courses/','course apis')
 
 coursemodel = CourseModel()
 courseschema = CourseSchema(many=True)
+
 
 @api.route('/courses')
 class Course(Resource):
@@ -25,6 +26,19 @@ class Course(Resource):
         db.session.add(course_new)
         db.session.commit()
         course_data['id']=str(course_new.id)
+        return course_data
+
+
+@api.route('/courses/<uuid:id>')
+@api.param('id', 'course identifier')
+class CourseById(Resource):
+    def put(self,id):
+        course_data = request.get_json()
+        course_current = coursemodel.query.get(id)
+        course_update = CourseModel(**course_data)
+        course_update['id'] = id
+        db.session.merge(course_update)
+        db.session.commit()
         return course_data
 
 
