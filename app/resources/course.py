@@ -1,24 +1,26 @@
 from flask_restx import Resource, Api, Namespace, fields
-from flask import jsonify, request
-from flask_sqlalchemy import SQLAlchemy
+from flask import jsonify, request, make_response
+
 
 from ..models.course import *
 
 from app import app
 from app import db
+from ..library import util
 
 api = Api(app)
 # ns = api.namespace('/courses/','course apis')
 
 coursemodel = CourseModel()
-courseschema = CourseSchema(many=True)
+courseschema = CourseSchema()
+courses_schema = CourseSchema(many=True)
 
 
 @api.route('/courses')
 class Course(Resource):
     def get(self):
         courses = coursemodel.query.all()
-        return jsonify(courseschema.dump(courses))
+        return jsonify(courses_schema.dump(courses))
 
     def post(self):
         course_data = request.get_json()
@@ -33,10 +35,8 @@ class Course(Resource):
 @api.param('id', 'course identifier')
 class CourseById(Resource):
     def put(self,id):
-        course_data = request.get_json()
-        course_current = coursemodel.query.get(id)
-        course_update = CourseModel(**course_data)
-        course_update['id'] = id
+        course_update = coursemodel.query.get(id)
+        course_data = util.validate_and_merge(request, courseschema, course_update, id)
         db.session.merge(course_update)
         db.session.commit()
         return course_data

@@ -1,8 +1,28 @@
+CREATE TABLE public.courses (
+    id          uuid PRIMARY KEY,
+    code        char(3) NOT NULL,
+    title       varchar(40) NOT NULL,
+    min_age     integer NOT NULL,
+    max_age     integer NOT NULL,
+    createts    timestamp with time zone,
+    updatets    timestamp with time zone,
+    CONSTRAINT unique_code UNIQUE(code)
+);
+
 INSERT INTO public.courses(
-	id, code, title, age_group, createts, updatets)
+	id, code, title, min_age, max_age, createts, updatets)
 	VALUES ('47ec7120-97f3-432a-8775-8738664aadf2', 'BGI', 'Bhagavad Gita Introduction',
-			'10-70', '2023-03-07T06:10:50+00:00', '2023-03-07T06:10:50+00:00');
+			10,70, '2023-03-07T06:10:50+00:00', '2023-03-07T06:10:50+00:00');
 
 
 SELECT id, code, title, age_group, createts, updatets
       	FROM public.courses;
+__________________________________________________________________________________
+
+POST course
+{
+       "min_age": 16,
+       "max_age": 100,
+       "code": "SBO",
+       "title": "Srimad Bhagavatam Overview"
+}
