@@ -36,10 +36,11 @@ class Course(Resource):
 class CourseById(Resource):
     def put(self,id):
         course_update = coursemodel.query.get(id)
-        course_data = util.validate_and_merge(request, courseschema, course_update, id)
-        db.session.merge(course_update)
-        db.session.commit()
-        return course_data
+        util.validate_request(request, courseschema)
+        util.merge_request_with_model(course_update, request, courseschema, id)
+        # db.session.merge(course_update)
+        # db.session.commit()
+        return True
 
 
 
