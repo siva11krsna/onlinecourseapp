@@ -12,16 +12,15 @@ def validate_request(input_request, input_schema):
     return True
 
 
-def merge_request_with_model(model_entity, input_request, input_schema, id):
+def merge_request_with_model(model_entity, input_request, input_schema):
 
-    input_object = input_schema.load(input_request.json)
     model_object = input_schema.dump(model_entity)
 
-    for key, value in input_request.json.items():
-        print(key, value)
-
     for key, value in model_object.items():
-        print(key, value)
+        if(key in input_request.json):
+            setattr(model_entity, key, input_request.json[key])
+
+
 
 
 
